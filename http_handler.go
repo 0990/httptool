@@ -43,6 +43,10 @@ func (s *Server) handleMyip() http.HandlerFunc {
 			s.respondRaw(w, r, err.Error(), http.StatusOK)
 			return
 		}
+
+		for m, v := range r.Header {
+			fmt.Println(m, v)
+		}
 		s.respondRaw(w, r, host, http.StatusOK)
 	}
 }

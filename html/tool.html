@@ -1,0 +1,185 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+		<title>程序员工具箱</title>
+		<script>
+		    function showcurrenttime(){
+				var timestamp=new Date().getTime()/1000;
+				document.getElementById("timestamp").value = parseInt(timestamp);
+				timestamp2time();
+			}
+			
+			function showbase64demo(){
+				document.getElementById("expression").value = "btoa('hello')";
+				evalexpression();
+			}
+			
+			function showMyIP(){
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function(){
+					if( xhr.readyState == 4){
+						if( xhr.status >= 200 && xhr.status < 300 || xhr.status == 304){
+						    var resp = JSON.parse(xhr.responseText);
+							var content = resp.ip+","+resp.city+","+resp.region+","+resp.country+","+resp.org;
+							document.getElementById("publicIP").value = content;
+						}
+					}
+				};
+
+				var url = "https://ipinfo.io/json";
+				xhr.open("get", url, true);
+				xhr.send(null);
+			}
+			
+			function timestamp2time(){
+				var s = document.getElementById("timestamp");
+				var timestamp = s.value;
+				var date = new Date(timestamp*1000 + 8 * 3600 * 1000); // 增加8小时
+                var v = date.toJSON().substr(0, 19).replace('T', ' ');
+				document.getElementById("time").value = v;
+			}
+			
+			function time2timestamp(){
+				var t = document.getElementById("time").value 
+				var date = new Date(t)
+				 document.getElementById("timestamp").value = date.getTime()/1000;
+			}
+
+			function decimal2other(){
+				var decimal = document.getElementById("decimal").value;
+				decimal = parseInt(decimal);
+				assigndecimal(decimal);
+			}
+
+			function hex2other(){
+				var hex = document.getElementById("hex").value;
+				var decimal =  parseInt(hex,16);
+				assigndecimal(decimal);
+			}
+
+			function binary2other(){
+				var binary = document.getElementById("binary").value;
+				var decimal =  parseInt(binary,2);
+				assigndecimal(decimal);
+			}
+			
+			function assigndecimal(decimal){
+				if(isNaN(decimal)){
+					return 
+				}
+				document.getElementById("decimal").value = decimal;
+				document.getElementById("hex").value = decimal.toString(16);
+				document.getElementById("binary").value = decimal.toString(2);
+			}
+
+			function evalexpression(){
+				var expression = document.getElementById("expression").value;
+				var v = eval(expression);
+				if (typeof(v) == "undefined"){
+					v = "";
+				}
+				document.getElementById("result").value = v;
+			}
+
+			function jsonstringify(){
+				var v = document.getElementById("json").value;
+				var obj = null;
+				try {
+					obj = JSON.parse(v);
+				}catch(d){
+				
+				}
+				
+				if (obj == null){
+					console.log("json格式错误");
+					return;
+				}
+				var str = JSON.stringify(obj,null,4);
+				document.getElementById("json").value = str;
+			}
+		</script>
+	</head>
+	<body>
+		<form class="form-horizontal" style="width:500px">
+		    <div class="form-group">
+		    <div class="col-3 col-sm-12">
+				<label class="form-label" for="input-example-1">时间戳：</label>
+			</div>
+			<div class="col-9 col-sm-12">
+				<input class="form-input" id="timestamp" type="text" placeholder="时间戳" onblur="timestamp2time()">
+			</div>
+			</div>
+			<div class="form-group">
+		    <div class="col-3 col-sm-12">
+				<label class="form-label" for="input-example-1">北京时间：</label>
+			</div>
+			<div class="col-9 col-sm-12">
+				<input class="form-input" id="time" type="text" placeholder="北京时间" onblur="time2timestamp()">
+			</div>
+			</div>
+		</form>
+		<form class="form-horizontal" style="width:500px">
+		    <div class="form-group">
+		    <div class="col-3 col-sm-12">
+				<label class="form-label" for="input-example-1">十进制：</label>
+			</div>
+			<div class="col-9 col-sm-12">
+				<input class="form-input" id="decimal" type="text" placeholder="十进制" onblur="decimal2other()">
+			</div>
+			</div>
+			<div class="form-group">
+		    <div class="col-3 col-sm-12">
+				<label class="form-label" for="input-example-1">十六进制：</label>
+			</div>
+			<div class="col-9 col-sm-12">
+				<input class="form-input" id="hex" type="text" placeholder="十六进制" onblur="hex2other()">
+			</div>
+			</div>
+			<div class="form-group">
+				<div class="col-3 col-sm-12">
+					<label class="form-label" for="input-example-1">二进制：</label>
+				</div>
+				<div class="col-9 col-sm-12">
+					<input class="form-input" id="binary" type="text" placeholder="二进制" onblur="binary2other()">
+				</div>
+			</div>
+		</form>
+		<form class="form-horizontal" style="width:500px">
+		    <div class="form-group">
+		    <div class="col-3 col-sm-12">
+				<label class="form-label" for="input-example-1">表达式：</label>
+			</div>
+			<div class="col-9 col-sm-12">
+				<input class="form-input" id="expression" type="text" placeholder="表达式" onblur="evalexpression()">
+			</div>
+			</div>
+			<div class="form-group">
+		    <div class="col-3 col-sm-12">
+				<label class="form-label" for="input-example-1">结果：</label>
+			</div>
+			<div class="col-9 col-sm-12">
+				<input class="form-input" id="result" type="text" placeholder="结果">
+			</div>
+			</div>
+		</form>
+		<form class="form-horizontal" style="width:500px">
+		    <div class="form-group">
+		    <div class="col-3 col-sm-12">
+				<label class="form-label" for="input-example-1">公网信息：</label>
+			</div>
+			<div class="col-9 col-sm-12">
+				<input class="form-input" id="publicIP" type="text"">
+			</div>
+			</div>
+		</form>
+		
+			<textarea class="form-input" id="json" placeholder="待格式化的JSON字符串" onblur="jsonstringify()" style="height:400px"></textarea>
+			
+		<script>
+			showcurrenttime();
+			showbase64demo();
+			showMyIP();
+		</script>	
+	</body>
+</html>
