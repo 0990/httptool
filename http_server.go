@@ -57,6 +57,7 @@ func (s *Server) GraceShutDown() error {
 
 func (s *Server) routes(code *QRCode) {
 	s.router.Handle("/", http.FileServer(http.Dir("html")))
+	s.router.Handle("/file/", http.StripPrefix("/file/", http.FileServer(http.Dir("file_dir"))))
 	s.router.Handle("/qrcode/create", s.handleQRCode(code))
 	s.router.Handle("/qrcode/", http.StripPrefix("/qrcode", code.FileServer()))
 	s.router.Handle("/myip", s.handleMyip())
